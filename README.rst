@@ -33,8 +33,8 @@ Install requirements
 
     pip3 install -r requirements.txt
 
-.. warning:: olutils must be install manually, see `documentation <https://github.com/OctaveLauby/olutils>`_.
 
+**Warning:** olutils must be install manually, see `documentation <https://github.com/OctaveLauby/olutils>`_.
 
 
 Examples
