@@ -1,7 +1,6 @@
 from setuptools import setup
 
 setup(
-
     name="olgaming",
     version="0.1.0",
     description="shell gaming library for maching learning",
@@ -16,6 +15,6 @@ setup(
     ],
     keywords="gaming game shell console machine learning collection ai",
     packages=[],
-    install_requires=["olutils"],
+    # install_requires=["olutils"],
     data_files=None,
 )
