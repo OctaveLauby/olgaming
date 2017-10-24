@@ -2,7 +2,7 @@
 
 Conversation between the 2 players.
 """
-from gaming.game import Game, InvalidAction
+from olgaming.game import Game, InvalidAction
 
 
 class Dummy(Game):

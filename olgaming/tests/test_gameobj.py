@@ -1,4 +1,4 @@
-from gaming import gameobj
+from olgaming import gameobj
 
 
 class MyGameObj(gameobj.GameObject):

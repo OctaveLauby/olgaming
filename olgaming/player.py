@@ -1,5 +1,5 @@
 """Skeleton for player object"""
-from gaming.gameobj import GameObject
+from olgaming.gameobj import GameObject
 
 
 class Player(GameObject):

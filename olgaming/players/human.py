@@ -1,5 +1,5 @@
 """Simple human player."""
-from gaming.player import Player
+from olgaming.player import Player
 
 
 class Human(Player):

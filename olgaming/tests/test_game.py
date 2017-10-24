@@ -2,9 +2,9 @@ import os
 import pytest
 import shutil
 
-from gaming import game
-from gaming.gameobj import GameObject
-from gaming.players import Bot, Human
+from olgaming import game
+from olgaming.gameobj import GameObject
+from olgaming.players import Bot, Human
 
 
 # --------------------------------------------------------------------------- #
@@ -134,7 +134,7 @@ def test_game_2():
     assert isinstance(ginstance.players[1], Human)
 
     # ---- Play
-    from gaming.players import human
+    from olgaming.players import human
     human.input = lambda x: "human"
     ginstance.play()
     assert ginstance.state() == ["a", "human", "a", "human"]

@@ -42,7 +42,7 @@ Examples
 
 .. code:: python
 
-    from gaming.games import Dummy
+    from olgaming.games import Dummy
 
     game = Dummy(
         bots=[1],           # You are player 1 (index 0)

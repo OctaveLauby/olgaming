@@ -1,5 +1,5 @@
-from gaming.player import Player
-from gaming.players import human
+from olgaming.player import Player
+from olgaming.players import human
 
 
 # --------------------------------------------------------------------------- #

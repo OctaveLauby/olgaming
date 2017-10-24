@@ -1,7 +1,7 @@
 import pytest
 
-from gaming import player
-from gaming.gameobj import GameObject
+from olgaming import player
+from olgaming.gameobj import GameObject
 
 
 def test_player():

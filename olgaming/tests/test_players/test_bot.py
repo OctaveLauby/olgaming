@@ -1,7 +1,7 @@
 from random import seed
 
-from gaming.player import Player
-from gaming.players import bot
+from olgaming.player import Player
+from olgaming.players import bot
 
 
 def test_bot():

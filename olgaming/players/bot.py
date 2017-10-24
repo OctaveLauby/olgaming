@@ -1,7 +1,7 @@
 """Dummy bot player."""
 import random
 
-from gaming.player import Player
+from olgaming.player import Player
 
 
 class Bot(Player):
