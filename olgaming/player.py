@@ -5,8 +5,9 @@ from olgaming.gameobj import GameObject
 class Player(GameObject):
     """Player skeleton."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, index, **kwargs):
         super().__init__(**kwargs)
+        self.index = index
         self.requires_visual = False
 
     def action(self, gstate, actions=None):

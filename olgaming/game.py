@@ -61,16 +61,17 @@ class Game(GameObject):
         if bots is None:
             bots = []
         self._players = [
-            self.__class__.bot(**p_params)
+            self.__class__.bot(index, **p_params)
             if player in bots
-            else self.__class__.human(**p_params)
+            else self.__class__.human(index, **p_params)
 
-            for player in range(self.__class__.players_n)
+            for index, player in enumerate(range(self.__class__.players_n))
         ]
 
         # Status
         self._player = 0    # Current player
         self._over = False
+        self.winner = None
 
     @property
     def players(self):
@@ -166,6 +167,11 @@ class Game(GameObject):
             # Refresh game and move on
             self.refresh()
             self.next()
+
+        if self.winner is None:
+            self.log.info("Tie Game")
+        else:
+            self.log.info("Winner is %s" % self.winner)
 
     # ----------------------------------------------------------------------- #
     # Display
