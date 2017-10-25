@@ -51,7 +51,10 @@ class TicTacToe(Game):
 
     def state(self):
         """Return current game state."""
-        return self.board
+        return [
+            None if player is None else player.index
+            for player in self.board
+        ]
 
     # ----------------------------------------------------------------------- #
     # Gameplay
@@ -85,23 +88,15 @@ class TicTacToe(Game):
             succession = [self.board[index] for index in combination]
             if succession == [self.player for _ in range(3)]:
                 self.raise_endflag()
-                self.winner = self.player
-                return [
-                    5 if player is self.player else -10
-                    for player in self.players
-                ]
+                self.new_winner(self.player)
 
-        if None not in self.board:
-            self.raise_endflag()
-            return [3 for player in self.players]
-
-        return [0 for player in self.players]
+        return self.dft_consequences()
 
     # ----------------------------------------------------------------------- #
     # Display
 
-    def display(self):
-        """Display game."""
+    def board_str(self):
+        """Return board string."""
         to_replace = {
             str(position): SYMBOLS[player.index]
             for position, player in enumerate(self.board)
@@ -111,7 +106,11 @@ class TicTacToe(Game):
         board_str = BOARD_FRMT
         for position, player in to_replace.items():
             board_str = board_str.replace(position, player)
-        print(board_str)
+        return board_str
+
+    def display(self):
+        """Display game."""
+        print(self.board_str())
         print(
             "Symbols: %s" % " | ".join(
                 map(
