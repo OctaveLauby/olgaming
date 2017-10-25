@@ -1,14 +1,21 @@
+import importlib
+import pytest
+
 from olgaming.players import Candid
-from olgaming.games.tictactoe.tictactoe import TicTacToe
+from olgaming.games.tictactoe import tictactoe
+
+
+def setup_function(function):
+    importlib.reload(tictactoe)
 
 
 def test_tictactoe_candidgame():
 
     # ---- Change default Bot into straight forward bot
 
-    TicTacToe.set('bot', Candid)
+    tictactoe.TicTacToe.set('bot', Candid)
 
-    game = TicTacToe(
+    game = tictactoe.TicTacToe(
         bots=[0, 1],
         rewards={'win': 5, 'lose': -10, 'neutral': 0},
         loglvl="DEBUG",
@@ -47,3 +54,64 @@ def test_tictactoe_candidgame():
     }
     assert player_1.consequences == [0, 0, 0, 0, 0, 0, 5]
     assert player_2.consequences == [0, 0, 0, 0, 0, 0, -10]
+
+
+def test_tictactoe_playbyplay():
+
+    game = tictactoe.TicTacToe(
+        loglvl="DEBUG",
+    )
+
+    game.act("4")
+    game.next()
+
+    with pytest.raises(tictactoe.InvalidAction):
+        game.act("4")
+
+    for action in ["2", "3", "5"]:
+        game.act(action)
+        game.next()
+
+    assert game.board_str() == (
+        "+---+---+---+\n"
+        "| 0 | 1 | X |\n"
+        "+---+---+---+\n"
+        "| O | O | X |\n"
+        "+---+---+---+\n"
+        "| 6 | 7 | 8 |\n"
+        "+---+---+---+"
+    )
+    assert not game.is_over()
+
+    for action in ["1", "8"]:
+        game.act(action)
+        game.next()
+
+    assert game.board_str() == (
+        "+---+---+---+\n"
+        "| 0 | O | X |\n"
+        "+---+---+---+\n"
+        "| O | O | X |\n"
+        "+---+---+---+\n"
+        "| 6 | 7 | X |\n"
+        "+---+---+---+"
+    )
+    assert game.status() == {
+        'player': 0,
+        'over': True,
+        'winners': [1],
+    }
+
+
+def test_tictactoe_tie():
+
+    game = tictactoe.TicTacToe(
+        loglvl="DEBUG",
+    )
+
+    for action in ["0", "1", "3", "4", "2", "6", "5", "8", "7"]:
+        game.act(action)
+        game.next()
+
+    assert game.is_over()
+    assert game.winners == []
