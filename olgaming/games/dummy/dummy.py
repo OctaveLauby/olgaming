@@ -28,10 +28,6 @@ class Dummy(Game):
         """Return available actions."""
         return list(Dummy.actions.keys())
 
-    def refresh(self):
-        """Refresh status of game"""
-        pass
-
     def state(self):
         """Return current game state."""
         return {"msg_sent": self.msg_n}
@@ -58,6 +54,7 @@ class Dummy(Game):
         self.msg_n += 1
         if msg == "bye":
             self.raise_endflag()
+            self.new_winner(self.player)
 
         # Return consequences
         return [
