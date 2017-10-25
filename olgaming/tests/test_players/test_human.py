@@ -7,7 +7,7 @@ from olgaming.players import human
 
 def test_human():
 
-    player = human.Human()
+    player = human.Human(index=8)
 
     assert isinstance(player, Player)
 

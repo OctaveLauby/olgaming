@@ -6,7 +6,7 @@ from olgaming.players import bot
 
 def test_bot():
 
-    player = bot.Bot()
+    player = bot.Bot(index=1)
 
     assert isinstance(player, Player)
 

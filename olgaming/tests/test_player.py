@@ -6,9 +6,11 @@ from olgaming.gameobj import GameObject
 
 def test_player():
 
-    player1 = player.Player()
-    player2 = player.Player(loglvl="DEBUG")
+    player1 = player.Player(index=8)
+    player2 = player.Player(6, loglvl="DEBUG")
 
+    assert player1.index == 8
+    assert player2.index == 6
     assert isinstance(player1, GameObject)
     assert player1.requires_visual is False
     assert player1.name == "Player_1"
