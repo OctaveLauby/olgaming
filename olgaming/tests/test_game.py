@@ -1,9 +1,11 @@
+import importlib
 import os
 import pytest
 import shutil
 
 from olgaming import game
 from olgaming.gameobj import GameObject
+from olgaming.player import Player
 from olgaming.players import Bot, Human
 
 
@@ -20,6 +22,8 @@ def setup_function(function):
     if os.path.exists(TMP_DIR):
         shutil.rmtree("tmp")
 
+    importlib.reload(game)
+
 
 def teardown_function(function):
     if os.path.exists(TMP_DIR):
@@ -30,7 +34,19 @@ def teardown_function(function):
 # Tests
 
 
-def test_game_1():
+def test_game_cls():
+    """Test game class."""
+
+    game.Game.set("bot", Player)
+    game.Game.set("human", Bot)
+    with pytest.raises(TypeError):
+        game.Game.set("bot", 1)
+
+    assert game.Game.bot == Player
+    assert game.Game.human == Bot
+
+
+def test_game_skeleton():
     """Test Skeleton only."""
 
     ginstance = game.Game(
@@ -96,7 +112,7 @@ def test_game_1():
     assert ninstance.status() == ginstance.status()
 
 
-def test_game_2():
+def test_game_use():
     """Test use of skeleton."""
 
     class MyGame(game.Game):

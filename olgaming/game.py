@@ -17,6 +17,7 @@ import os
 
 from olutils.tools import load, save
 from .gameobj import GameObject
+from .player import Player
 from .players import Bot, Human
 
 
@@ -38,6 +39,21 @@ class Game(GameObject):
     bot = Bot       # Class used to build bots
     human = Human   # Class used to build humans
     players_n = 2   # Number of players in game
+
+    @classmethod
+    def set(cls, param, value):
+        """Set class attribute to value."""
+        if param in ["bot", "human"]:
+            if not (isinstance(value, type) and issubclass(value, Player)):
+                raise TypeError(
+                    "Param %s must be set to Player subclass, got %s"
+                    % (param, repr(value))
+                )
+        else:
+            raise ValueError(
+                "Parameter %s can't be set" % (param)
+            )
+        setattr(cls, param, value)
 
     # ----------------------------------------------------------------------- #
     # Initialisation and properties
