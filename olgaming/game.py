@@ -15,7 +15,9 @@ Vocabulary:
 """
 import os
 
+from olutils.params import read_params
 from olutils.tools import load, save
+
 from .gameobj import GameObject
 from .player import Player
 from .players import Bot, Human
@@ -40,6 +42,13 @@ class Game(GameObject):
     human = Human   # Class used to build humans
     players_n = 2   # Number of players in game
 
+    dft_rewards = {
+        "win": 5,
+        "tie": 3,
+        "lose": -10,
+        "neutral": 0,
+    }
+
     @classmethod
     def set(cls, param, value):
         """Set class attribute to value."""
@@ -58,11 +67,12 @@ class Game(GameObject):
     # ----------------------------------------------------------------------- #
     # Initialisation and properties
 
-    def __init__(self, bots=None, p_params=None, **params):
+    def __init__(self, rewards=None, bots=None, p_params=None, **params):
         """Init a game.
 
         Args:
             bots        (list): index of players to replace with bots
+            rewards     (dict): dict of rewards (lose, win, tie or neutral)
             load_path   (str):  path where game can be loaded from
             p_params    (dict): key arguments for players
             params      (dict): key arguments for game object
@@ -70,6 +80,14 @@ class Game(GameObject):
             @see .gameobj.GameObject.params
         """
         super().__init__(**params)
+
+        # Rewards
+        rewards = {} if rewards is None else rewards
+        self.rewards = read_params(
+            rewards,
+            self.dft_rewards,
+            param_names="rewards",
+        )
 
         # Players
         if p_params is None:
@@ -86,9 +104,9 @@ class Game(GameObject):
         ]
 
         # Status
-        self._player = 0    # Current player
+        self._player = 0        # Current player
         self._over = False
-        self.winner = None  # Winner (can be a list of players)
+        self._winners = set()   # Index of winner (can be a list of indexes)
 
         self.check_attributes()
 
@@ -118,11 +136,21 @@ class Game(GameObject):
         """Return current player."""
         return self.players[self._player]
 
+    @property
+    def winners(self):
+        """Return list of winners."""
+        return [
+            player
+            for player in self.players
+            if player.index in self._winners
+        ]
+
     def status(self):
         """Return status of game."""
         return {
             'player': self._player,
             'over': self._over,
+            'winners': list(self._winners),
         }
 
     # ----------------------------------------------------------------------- #
@@ -135,6 +163,17 @@ class Game(GameObject):
     def is_over(self):
         """Return whether game is over."""
         return self._over
+
+    def new_winner(self, player):
+        """Add player to list of winners.
+
+        Args:
+            player (int or player.Player)
+        """
+        if isinstance(player, int):
+            self._winners.add(player)
+        else:
+            self._winners.add(player.index)
 
     def raise_endflag(self):
         """Raise end flag."""
@@ -159,6 +198,23 @@ class Game(GameObject):
             (list): consequences for each player
         """
         raise NotImplementedError
+
+    def dft_consequences(self):
+        """Return default consequences given the Game rewards."""
+        if not self.is_over():
+            return [
+                self.rewards['neutral'] for _ in self.players
+            ]
+        elif not self.winners:
+            return [
+                self.rewards['tie'] for _ in self.players
+            ]
+        return [
+            self.rewards['win']
+            if player in self.winners
+            else self.rewards['lose']
+            for player in self.players
+        ]
 
     def next(self):
         """Go to next player."""
@@ -203,10 +259,12 @@ class Game(GameObject):
             self.refresh()
             self.next()
 
-        if self.winner is None:
+        if not self.winners:
             self.log.info("Tie Game")
+        elif len(self.winners) == 1:
+            self.log.info("Winner is %s" % self.winners[0])
         else:
-            self.log.info("Winner is %s" % self.winner)
+            self.log.info("Winners are %s" % ", ".join(map(str, self.winners)))
 
     # ----------------------------------------------------------------------- #
     # Display
@@ -226,6 +284,7 @@ class Game(GameObject):
         """Load status dictionary."""
         self._over = status['over']
         self._player = status['player']
+        self._winners = set(status['winners'])
 
     def load(self, load_path):
         """Load game environement from file."""

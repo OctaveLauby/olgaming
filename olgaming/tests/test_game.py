@@ -51,6 +51,7 @@ def test_game_skeleton():
 
     ginstance = game.Game(
         bots=[1],
+        rewards={'win': 10, 'tie': -3},
         p_params={'loglvl': "INFO"},
         loglvl="DEBUG",
     )
@@ -65,10 +66,20 @@ def test_game_skeleton():
     assert isinstance(ginstance.players[0], Human)
     assert isinstance(ginstance.players[1], Bot)
 
+    # ---- Rewards
+    assert ginstance.rewards == {
+        'lose': -10,
+        'neutral': 0,
+        'tie': -3,
+        'win': 10,
+    }
+    assert ginstance.dft_consequences() == [0, 0]
+
     # ---- Environment
     assert ginstance.status() == {
         'over': False,
         'player': 0,
+        'winners': [],
     }
     assert ginstance.state() == []
     assert ginstance.av_actions() is None
@@ -86,13 +97,25 @@ def test_game_skeleton():
     assert ginstance.status() == {
         'over': True,
         'player': 1,
+        'winners': [],
     }
+    assert ginstance.dft_consequences() == [-3, -3]
 
     ginstance.next()
+    ginstance.new_winner(ginstance.players[0])
     assert ginstance.status() == {
         'over': True,
         'player': 0,
+        'winners': [0],
     }
+    assert ginstance.dft_consequences() == [10, -10]
+
+    ginstance._winners = set()
+    ginstance.new_winner(1)
+    assert ginstance.dft_consequences() == [-10, 10]
+
+    ginstance.new_winner(0)
+    assert ginstance.dft_consequences() == [10, 10]
 
     with pytest.raises(NotImplementedError):
         ginstance.act("action")
@@ -110,6 +133,13 @@ def test_game_skeleton():
     ninstance = game.Game()
     ninstance.load(save_dir)
     assert ninstance.status() == ginstance.status()
+
+    # ---- Errors
+
+    with pytest.raises(KeyError):
+        game.Game(
+            rewards={'unexistant case': 3}
+        )
 
     with pytest.raises(ValueError):
         game.Game(
@@ -132,6 +162,7 @@ def test_game_use():
             """Add action to history until hist len >= 4."""
             self.hist.append(action)
             if len(self.hist) >= 4:
+                self.new_winner(0)
                 self.raise_endflag()
             return [None, None]
 
@@ -159,7 +190,7 @@ def test_game_use():
     human.input = lambda x: "human"
     ginstance.play()
     assert ginstance.state() == ["a", "human", "a", "human"]
-    assert ginstance.status() == {'over': True, 'player': 0}
+    assert ginstance.status() == {'over': True, 'player': 0, 'winners': [0]}
 
     # ---- Save / Load
     save_dir = os.path.join(TMP_DIR, "test_2_game")
@@ -167,4 +198,4 @@ def test_game_use():
     ninstance = MyGame()
     ninstance.load(save_dir)
     assert ninstance.state() == ["a", "human", "a", "human"]
-    assert ninstance.status() == {'over': True, 'player': 0}
+    assert ninstance.status() == {'over': True, 'player': 0, 'winners': [0]}
