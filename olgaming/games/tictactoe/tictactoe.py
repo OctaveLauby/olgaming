@@ -72,6 +72,9 @@ class TicTacToe(Game):
         except (AssertionError, ValueError):
             raise InvalidAction(action)
 
+        if self.board[position] is not None:
+            raise InvalidAction(action)
+
         # Update board
         self.log.debug(
             "Player %s has played on position %s",
@@ -89,6 +92,9 @@ class TicTacToe(Game):
             if succession == [self.player for _ in range(3)]:
                 self.raise_endflag()
                 self.new_winner(self.player)
+
+        if None not in self.board:
+            self.raise_endflag()
 
         return self.dft_consequences()
 
