@@ -86,7 +86,7 @@ class Game(GameObject):
         self.rewards = read_params(
             rewards,
             self.dft_rewards,
-            param_names="rewards",
+            name="rewards",
         )
 
         # Players
