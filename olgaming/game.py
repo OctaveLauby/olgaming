@@ -76,18 +76,37 @@ class Game(GameObject):
             p_params = {}
         if bots is None:
             bots = []
+        self._bots = bots
         self._players = [
-            self.__class__.bot(index, **p_params)
+            self.bot(index, **p_params)
             if player in bots
-            else self.__class__.human(index, **p_params)
+            else self.human(index, **p_params)
 
-            for index, player in enumerate(range(self.__class__.players_n))
+            for index, player in enumerate(range(self.players_n))
         ]
 
         # Status
         self._player = 0    # Current player
         self._over = False
-        self.winner = None
+        self.winner = None  # Winner (can be a list of players)
+
+        self.check_attributes()
+
+    def check_attributes(self):
+        """Raise ValueError if attributes are not consistent."""
+
+        # Bot indexes
+        for index in self._bots:
+            if not (isinstance(index, int) and index >= 0):
+                raise ValueError(
+                    "Index of bot must be integer greater than 0, got %s"
+                    % index
+                )
+            if index >= self.players_n:
+                raise ValueError(
+                    "Index (%s) of bot out of range, must be < %s"
+                    % (index, self.players_n)
+                )
 
     @property
     def players(self):

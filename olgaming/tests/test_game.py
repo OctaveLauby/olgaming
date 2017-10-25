@@ -111,6 +111,11 @@ def test_game_skeleton():
     ninstance.load(save_dir)
     assert ninstance.status() == ginstance.status()
 
+    with pytest.raises(ValueError):
+        game.Game(
+            bots=[2],
+        )
+
 
 def test_game_use():
     """Test use of skeleton."""
