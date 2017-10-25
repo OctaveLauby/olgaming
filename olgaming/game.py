@@ -67,14 +67,16 @@ class Game(GameObject):
     # ----------------------------------------------------------------------- #
     # Initialisation and properties
 
-    def __init__(self, rewards=None, bots=None, p_params=None, **params):
+    def __init__(self, rewards=None, bots=None, p_params=None, players=None,
+                 **params):
         """Init a game.
 
         Args:
-            bots        (list): index of players to replace with bots
             rewards     (dict): dict of rewards (lose, win, tie or neutral)
-            load_path   (str):  path where game can be loaded from
+            bots        (list): index of players to replace with bots
             p_params    (dict): key arguments for players
+            players     (list): list of players
+                if given, will prevail on both bots and p_params
             params      (dict): key arguments for game object
 
             @see .gameobj.GameObject.params
@@ -90,18 +92,11 @@ class Game(GameObject):
         )
 
         # Players
-        if p_params is None:
-            p_params = {}
-        if bots is None:
-            bots = []
-        self._bots = bots
-        self._players = [
-            self.bot(index, **p_params)
-            if player in bots
-            else self.human(index, **p_params)
-
-            for index, player in enumerate(range(self.players_n))
-        ]
+        self._players = players
+        if self._players is None:
+            bots = [] if bots is None else bots
+            p_params = {} if p_params is None else p_params
+            self.init_players(bots, p_params)
 
         # Status
         self._player = 0        # Current player
@@ -113,8 +108,34 @@ class Game(GameObject):
     def check_attributes(self):
         """Raise ValueError if attributes are not consistent."""
 
-        # Bot indexes
-        for index in self._bots:
+        if len(self._players) != self.players_n:
+            raise ValueError(
+                "List of players must contain %s players, got %s"
+                % (len(self._players), self.players_n)
+            )
+
+        for index, player in enumerate(self.players):
+            if not isinstance(player, Player):
+                raise ValueError(
+                    "Players must be instances of gaming.player.Player, got %s"
+                    % type(player)
+                )
+            if player.index != index:
+                raise ValueError(
+                    "Player index (%s) != position in player list (%s)"
+                    % (player.index, index)
+                )
+
+    def init_players(self, bots, p_params):
+        """Initialize list of players.
+
+        Args:
+            bots        (list): index of players to replace with bots
+            p_params    (dict): key arguments for players
+        """
+
+        # Check bot indexes
+        for index in bots:
             if not (isinstance(index, int) and index >= 0):
                 raise ValueError(
                     "Index of bot must be integer greater than 0, got %s"
@@ -125,6 +146,15 @@ class Game(GameObject):
                     "Index (%s) of bot out of range, must be < %s"
                     % (index, self.players_n)
                 )
+
+        # Create players
+        self._players = [
+            self.bot(index, **p_params)
+            if player in bots
+            else self.human(index, **p_params)
+
+            for index, player in enumerate(range(self.players_n))
+        ]
 
     @property
     def players(self):

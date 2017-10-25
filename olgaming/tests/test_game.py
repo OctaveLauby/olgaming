@@ -146,6 +146,33 @@ def test_game_skeleton():
             bots=[2],
         )
 
+    # ---- Customize players
+
+    player_1, player_2 = Player(index=0), Bot(index=1)
+    players = [player_1, player_2]
+    ginstance = game.Game(
+        players=players,
+    )
+    assert ginstance.players == players
+
+    ginstance = game.Game(
+        players=players,
+        bots=[0, 1],
+        p_params={'loglvl': "ERROR"}
+    )
+    assert ginstance.players == players
+
+    with pytest.raises(ValueError):
+        game.Game(
+            players=[player_1, "not a player"],
+        )
+
+    with pytest.raises(ValueError):
+        game.Game(
+            players=[player_2, player_1],
+        )
+
+
 
 def test_game_use():
     """Test use of skeleton."""
