@@ -27,8 +27,6 @@ Install package
 Install requirements
 --------------------
 
-
-
 .. code:: shell
 
     pip3 install -r requirements.txt
@@ -40,6 +38,8 @@ Install requirements
 Examples
 ========
 
+Here is a basic example of how to launch a game:
+
 .. code:: python
 
     from olgaming.games import Dummy
@@ -49,3 +49,12 @@ Examples
         loglvl='ERROR',
     )
     game.play()             # Follow instructions
+
+
+It is possible to launch any game using `play <https://github.com/OctaveLauby/olgaming/blob/master/play.py>`_ script :
+
+.. code:: bash
+
+    python play.py -h
+    python play.py Dummy
+    python play.py TicTacToe -b 0
