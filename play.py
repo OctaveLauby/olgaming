@@ -5,14 +5,13 @@ This script launch main functionality of the project.
 Its name can be more explicit than main, but is has to be project root to
 access all packages.
 """
-from olgaming import games
-from olgaming.gameobj import GameObject
+import olgaming
 from olutils.params import add_dft_args
 
 
 def main(game_name, load_path, g_kwargs, g_params, p_params):
     """Launch game."""
-    game_cls = getattr(games, game_name)
+    game_cls = getattr(olgaming.games, game_name)
     kwargs = g_kwargs
     kwargs.update(g_params)
     kwargs['p_params'] = p_params
@@ -46,16 +45,20 @@ if __name__ == "__main__":
     )
 
     # Object parameters (for logs and all)
-    dft_params = GameObject.dft_params()
+    game_dft_params = olgaming.Game.dft_params()
     add_dft_args(
         parser=parser,
-        dft_args=dft_params,
+        dft_args=game_dft_params,
         flag_prefix="",
         help_prefix="game parameter ",
     )
+
+    player_dft_params = olgaming.Player.dft_params()
+    del player_dft_params['identity']
+    del player_dft_params['name']
     add_dft_args(
         parser=parser,
-        dft_args=dft_params,
+        dft_args=player_dft_params,
         flag_prefix="p_",
         help_prefix="player parameter ",
     )
@@ -73,10 +76,10 @@ if __name__ == "__main__":
         },
         g_params={
             param: getattr(args, param)
-            for param in dft_params
+            for param in game_dft_params
         },
         p_params={
             param: getattr(args, "p_" + param)
-            for param in dft_params
+            for param in player_dft_params
         },
     )
