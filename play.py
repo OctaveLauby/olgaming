@@ -25,7 +25,8 @@ if __name__ == "__main__":
     from argparse import ArgumentParser
 
     av_games = [
-        game.__name__ for game in olgaming.GameObject.__inheritors__[olgaming.Game]
+        game.__name__
+        for game in olgaming.GameObject.__inheritors__[olgaming.Game]
     ]
     av_games.sort()
 

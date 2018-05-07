@@ -27,12 +27,12 @@ Install package
 Install requirements
 --------------------
 
+**Warning:** olutils must be install manually, see `documentation <https://github.com/OctaveLauby/olutils>`_.
+
 .. code:: shell
 
     pip3 install -r requirements.txt
 
-
-**Warning:** olutils must be install manually, see `documentation <https://github.com/OctaveLauby/olutils>`_.
 
 
 Examples
