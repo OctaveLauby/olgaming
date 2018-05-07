@@ -24,13 +24,18 @@ def main(game_name, load_path, g_kwargs, g_params, p_params):
 if __name__ == "__main__":
     from argparse import ArgumentParser
 
+    av_games = [
+        game.__name__ for game in olgaming.GameObject.__inheritors__[olgaming.Game]
+    ]
+    av_games.sort()
+
     # Game settings
     parser = ArgumentParser(
         "Play a game"
     )
     parser.add_argument(
         'game', type=str,
-        help='game to play'
+        help="game to play (%s)" % " or ".join(av_games)
     )
     parser.add_argument(
         '-b', '--bots', type=int,
