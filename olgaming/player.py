@@ -10,6 +10,7 @@ class Player(GameObject):
         self.index = index
         self.requires_visual = False
         self.last_observation = None
+        self.last_reward = None
 
     def action(self, gstate, actions=None):
         """Return action of players.
@@ -26,6 +27,12 @@ class Player(GameObject):
     def receive(self, msg_dict):
         """Receiving message dictionary (json frmt)."""
         self.log.debug("Receiving message : %s" % msg_dict)
+
+        if not isinstance(msg_dict, dict):
+            err_msg = "Message to player must be a dictionary"
+            self.log.fatal("Message to player must be a dictionary")
+            raise TypeError(err_msg)
+
         self.msg_dict_handler(msg_dict)
 
     def msg_dict_handler(self, msg_dict):
@@ -36,7 +43,7 @@ class Player(GameObject):
             verb = msg_dict['verb']
         except KeyError:
             err_msg = "Expecting 'verb' key in message to player"
-            self.log.error(err_msg)
+            self.log.fatal(err_msg)
             raise KeyError(err_msg)
 
         # Check if a method exists to accomplish purpose
@@ -44,7 +51,7 @@ class Player(GameObject):
             handler = getattr(self, 'verb_' + verb)
         except AttributeError:
             err_msg = "Verb '%s' is not handled by player" % verb
-            self.log.error(err_msg)
+            self.log.fatal(err_msg)
             raise ValueError(err_msg)
 
         # Gather content to accomplish purpose
@@ -52,7 +59,7 @@ class Player(GameObject):
             content = msg_dict['content']
         except KeyError:
             err_msg = "Expecting 'content' key in message to player"
-            self.log.error(err_msg)
+            self.log.fatal(err_msg)
             raise KeyError(err_msg)
 
         return handler(content)
@@ -63,6 +70,13 @@ class Player(GameObject):
 
     def verb_reward(self, content):
         """Manage reward from game."""
+        try:
+            value = float(content)
+        except ValueError:
+            err_msg = "Reward content must be a convertible to float"
+            self.log.fatal(err_msg)
+            raise ValueError(err_msg)
+        self.last_reward = value
         self.take(content)
 
     def take(self, consequence):
