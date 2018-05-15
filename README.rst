@@ -58,3 +58,14 @@ It is possible to launch any game using `play <https://github.com/OctaveLauby/ol
     python play.py -h
     python play.py Dummy
     python play.py TicTacToe -b 0
+
+
+
+Tests
+=====
+
+One can run the tests using the following command:
+
+.. code:: bash
+
+    sh run_tests.sh
