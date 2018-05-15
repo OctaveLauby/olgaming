@@ -33,7 +33,7 @@ class Player(GameObject):
             self.log.fatal("Message to player must be a dictionary")
             raise TypeError(err_msg)
 
-        self.msg_dict_handler(msg_dict)
+        return self.msg_dict_handler(msg_dict)
 
     def msg_dict_handler(self, msg_dict):
         """Manage incoming message."""
@@ -63,6 +63,10 @@ class Player(GameObject):
             raise KeyError(err_msg)
 
         return handler(content)
+
+    def verb_act(self, content):
+        """Manage game state to suggest an action"""
+        return self.action(**content)
 
     def verb_observe(self, content):
         """Manage new observation of game."""
