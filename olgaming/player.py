@@ -24,6 +24,13 @@ class Player(GameObject):
         """
         raise NotImplementedError
 
+    def take(self, consequence):
+        """Nothing"""
+        self.log.debug("Skip consequence %s", consequence)
+
+    # ----------------------------------------------------------------------- #
+    # Communication assets
+
     def receive(self, msg_dict):
         """Receiving message dictionary (json frmt)."""
         self.log.debug("Receiving message : %s" % msg_dict)
@@ -76,7 +83,3 @@ class Player(GameObject):
         """Manage reward from game."""
         self.last_reward = content
         self.take(content)
-
-    def take(self, consequence):
-        """Nothing"""
-        self.log.debug("Skip consequence %s", consequence)
