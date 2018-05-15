@@ -18,24 +18,31 @@ def test_player():
     assert player2.get_loglvl() == 10
 
     with pytest.raises(NotImplementedError):
-        player1.action("gstate")
+        player1.action(gstate="some_state")
 
     assert player2.take("consequence") is None
 
     # Test communication
 
+    # -- Observe
     assert player1.last_observation is None
     player1.receive({'verb': "observe", 'content': "an_observation"})
     assert player1.last_observation == "an_observation"
     player1.receive({'verb': "observe", 'content': "new_observation"})
     assert player1.last_observation == "new_observation"
 
+    # -- Reward
     assert player1.last_reward is None
     player1.receive({'verb': "reward", 'content': 1})
     assert player1.last_reward == 1
     player1.receive({'verb': "reward", 'content': 2})
     assert player1.last_reward == 2
 
+    # -- Act
+    with pytest.raises(NotImplementedError):
+        player1.receive({'verb': "act", 'content': {'gstate': "some_state"}})
+
+    # -- Unconsistent messages
     with pytest.raises(TypeError):
         player1.receive(12)
 
