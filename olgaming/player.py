@@ -70,13 +70,7 @@ class Player(GameObject):
 
     def verb_reward(self, content):
         """Manage reward from game."""
-        try:
-            value = float(content)
-        except ValueError:
-            err_msg = "Reward content must be a convertible to float"
-            self.log.fatal(err_msg)
-            raise ValueError(err_msg)
-        self.last_reward = value
+        self.last_reward = content
         self.take(content)
 
     def take(self, consequence):

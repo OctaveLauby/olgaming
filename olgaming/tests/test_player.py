@@ -45,7 +45,3 @@ def test_player():
     with pytest.raises(KeyError):
         player1.receive({'verb': "reward", 'value': 12})
     assert player1.last_reward == 2
-
-    with pytest.raises(ValueError):
-        player1.receive({'verb': "reward", 'content': "a"})
-    assert player1.last_reward == 2
