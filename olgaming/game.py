@@ -266,10 +266,13 @@ class Game(GameObject):
                 self.display()
 
             # Catch and apply player action
-            action = self.player.action(
-                gstate=self.state(),
-                actions=self.av_actions(),
-            )
+            action = self.player.receive({
+                'verb': "act",
+                'content': {
+                    'gstate': self.state(),
+                    'actions': self.av_actions(),
+                }
+            })
             try:
                 consequences = self.act(action)
             except InvalidAction:
@@ -283,7 +286,7 @@ class Game(GameObject):
             self.log.debug("Apply consequences to players")
             assert len(consequences) == self.__class__.players_n
             for player, consequence in zip(self.players, consequences):
-                player.take(consequence)
+                player.receive({'verb': "reward", 'content': consequence})
 
             # Refresh game and move on
             self.refresh()
