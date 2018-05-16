@@ -3,8 +3,13 @@ from olgaming.gameobj import GameObject
 
 
 class Player(GameObject):
-    """Player skeleton."""
+    """Player skeleton.
 
+    Methods to overwrite:
+        - action
+        - observe
+        - take
+    """
     def __init__(self, index, **kwargs):
         super().__init__(**kwargs)
         self.index = index
@@ -24,9 +29,25 @@ class Player(GameObject):
         """
         raise NotImplementedError
 
+    def observe(self, game_descr):
+        """Remember last game description.
+
+        Args:
+            content (dict): game description
+                {
+                    'status': {
+                        'over': <bool>,
+                        'player': <int>,
+                        'winners': <list>
+                    },
+                    'state': game_state,
+                }
+        """
+        self.last_observation = game_descr
+
     def take(self, consequence):
-        """Nothing"""
-        self.log.debug("Skip consequence %s", consequence)
+        """Remember last reward."""
+        self.last_reward = consequence
 
     # ----------------------------------------------------------------------- #
     # Communication assets
@@ -72,14 +93,20 @@ class Player(GameObject):
         return handler(content)
 
     def verb_act(self, content):
-        """Manage game state to suggest an action"""
+        """Manage game state to suggest an action.
+
+        Args:
+            content (dict): kwargs of self.action method
+
+        Returns:
+            Next action
+        """
         return self.action(**content)
 
     def verb_observe(self, content):
         """Manage new observation of game."""
-        self.last_observation = content
+        self.observe(game_descr=content)
 
     def verb_reward(self, content):
         """Manage reward from game."""
-        self.last_reward = content
         self.take(content)
