@@ -173,7 +173,6 @@ def test_game_skeleton():
         )
 
 
-
 def test_game_use():
     """Test use of skeleton."""
 
@@ -218,6 +217,10 @@ def test_game_use():
     ginstance.play()
     assert ginstance.state() == ["a", "human", "a", "human"]
     assert ginstance.status() == {'over': True, 'player': 0, 'winners': [0]}
+    assert ginstance.players[0].last_observation == {
+        'status': {'over': True, 'player': 0, 'winners': [0]},
+        'state': ["a", "human", "a", "human"],
+    }
 
     # ---- Save / Load
     save_dir = os.path.join(TMP_DIR, "test_2_game")

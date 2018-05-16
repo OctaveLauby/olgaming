@@ -213,6 +213,18 @@ class Game(GameObject):
         """Refresh environement if necessary."""
         pass
 
+    def send_descr_to_players(self):
+        """Send current game description to players."""
+        descr = {
+            'status': self.status(),
+            'state': self.state(),
+        }
+        for player in self.players:
+            player.receive({
+                'verb': "observe",
+                'content': descr,
+            })
+
     def state(self):
         """Return current game state."""
         self.log.warning("Game has no state")
@@ -265,6 +277,9 @@ class Game(GameObject):
             if cplayer.requires_visual:
                 self.display()
 
+            # Send game description to players
+            self.send_descr_to_players()
+
             # Catch and apply player action
             action = self.player.receive({
                 'verb': "act",
@@ -291,6 +306,9 @@ class Game(GameObject):
             # Refresh game and move on
             self.refresh()
             self.next()
+
+        # Send game description to players
+        self.send_descr_to_players()
 
         if not self.winners:
             self.log.info("Tie Game")
