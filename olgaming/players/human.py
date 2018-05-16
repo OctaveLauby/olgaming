@@ -5,6 +5,7 @@ from olgaming.player import Player
 class Human(Player):
     """Simple Human."""
 
+    @Player.keep_doc
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.requires_visual = True

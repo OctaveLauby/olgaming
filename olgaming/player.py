@@ -10,8 +10,15 @@ class Player(GameObject):
         - (opt) observe
         - (opt) take
     """
-    def __init__(self, index, **kwargs):
-        super().__init__(**kwargs)
+
+    def __init__(self, index, **params):
+        """Init a new player.
+
+        Args:
+            index   (int)   : index of player in game players list
+            params  (dict)  : key arguments for game object
+        """
+        super().__init__(**params)
         self.index = index
         self.requires_visual = False
         self.last_observation = None
