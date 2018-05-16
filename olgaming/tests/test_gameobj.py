@@ -101,3 +101,21 @@ def test_gameobject():
     assert base.get_loglvl(explicit=True) == "DEBUG"
     assert instance.get_loglvl(explicit=True) == "ERROR"
     assert subinstance.get_loglvl(explicit=True) == "DEBUG"
+
+
+def test_inheritance():
+
+    class A(gameobj.GameObject):
+        def func(self):
+            """docstring"""
+            return "result"
+
+    class B(A):
+        @A.keep_doc
+        def func(self):
+            return "new_result"
+
+    instance = B()
+
+    assert instance.func() == "new_result"
+    assert A.func.__doc__ == B.func.__doc__

@@ -125,3 +125,18 @@ class GameObject(LogClass, metaclass=GameObjMeta):
 
     def __repr__(self):
         return str(self)
+
+    # ----------------------------------------------------------------------- #
+    # Class decorators
+
+    @classmethod
+    def keep_doc(cls, method):
+        """Decorator to override a method and keep documentation."""
+        try:
+            method.__doc__ = getattr(cls, method.__name__).__doc__
+        except AttributeError:
+            raise AttributeError(
+                "%s is not an attribute of %s, so it can't be overwritten"
+                % method.__name__, cls.__name__
+            )
+        return method
