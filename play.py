@@ -6,7 +6,7 @@ Its name can be more explicit than main, but is has to be project root to
 access all packages.
 """
 import olgaming
-from olutils.params import add_dft_args
+from olutils.params import ArgumentParser
 
 
 def main(game_name, load_path, g_kwargs, g_params, p_params):
@@ -22,7 +22,6 @@ def main(game_name, load_path, g_kwargs, g_params, p_params):
 
 
 if __name__ == "__main__":
-    from argparse import ArgumentParser
 
     av_games = [
         game.__name__
@@ -52,8 +51,7 @@ if __name__ == "__main__":
 
     # Object parameters (for logs and all)
     game_dft_params = olgaming.Game.dft_params()
-    add_dft_args(
-        parser=parser,
+    parser.add_dft_args(
         dft_args=game_dft_params,
         flag_prefix="",
         help_prefix="game parameter ",
@@ -62,8 +60,7 @@ if __name__ == "__main__":
     player_dft_params = olgaming.Player.dft_params()
     del player_dft_params['identity']
     del player_dft_params['name']
-    add_dft_args(
-        parser=parser,
+    parser.add_dft_args(
         dft_args=player_dft_params,
         flag_prefix="p_",
         help_prefix="player parameter ",
