@@ -51,10 +51,10 @@ class TicTacToe(Game):
 
     def state(self):
         """Return current game state."""
-        return [
+        return tuple(
             None if player is None else player.index
             for player in self.board
-        ]
+        )
 
     # ----------------------------------------------------------------------- #
     # Gameplay

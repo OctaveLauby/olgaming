@@ -21,7 +21,7 @@ def test_tictactoe_candidgame():
         loglvl="DEBUG",
     )
 
-    assert game.state() == [None] * 9
+    assert game.state() == tuple([None] * 9)
     assert game.av_actions() == [str(i) for i in range(9)]
     assert game.board_str() == (
         "+---+---+---+\n"
@@ -34,7 +34,7 @@ def test_tictactoe_candidgame():
     )
 
     game.play()
-    assert game.state() == [0, 1, 0, 1, 0, 1, 0, None, None]
+    assert game.state() == (0, 1, 0, 1, 0, 1, 0, None, None)
     assert game.av_actions() == ["7", "8"]
     assert game.board_str() == (
         "+---+---+---+\n"
