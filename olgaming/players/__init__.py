@@ -2,3 +2,4 @@
 from .bot import Bot
 from .candid import Candid
 from .human import Human
+from .qlearner import Qlearner
