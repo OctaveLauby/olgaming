@@ -5,10 +5,10 @@ from olgaming.gameobj import GameObject
 class Player(GameObject):
     """Player skeleton.
 
-    Methods to overwrite:
+    Methods to override:
         - action
-        - observe
-        - take
+        - (opt) observe
+        - (opt) take
     """
     def __init__(self, index, **kwargs):
         super().__init__(**kwargs)

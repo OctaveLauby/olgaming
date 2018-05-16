@@ -44,7 +44,7 @@ class Qlearner(Player):
         self.params = dict(self.dft_params)
         self.memory = Memory(max_size=1)
 
-    # ---- Overwritten methods
+    # ---- Overridden methods
 
     def action(self, gstate, actions):
         if gstate not in self.qvalue:
