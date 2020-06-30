@@ -7,7 +7,7 @@ Basically a game is:
     - Each action has consequences on every players
 
 Vocabulary:
-    - environement: complete description of game (and players)
+    - environment: complete description of game (and players)
     - state:    descr of how the game looks like
                 e.g. where are the pawns
     - status:   where the game is at
@@ -59,9 +59,7 @@ class Game(GameObject):
                     % (param, repr(value))
                 )
         else:
-            raise ValueError(
-                "Parameter %s can't be set" % (param)
-            )
+            raise ValueError("Parameter %s can't be set" % param)
         setattr(cls, param, value)
 
     # ----------------------------------------------------------------------- #
@@ -209,7 +207,7 @@ class Game(GameObject):
         self._over = True
 
     def refresh(self):
-        """Refresh environement if necessary."""
+        """Refresh environment if necessary."""
         pass
 
     def send_descr_to_players(self):
@@ -337,7 +335,7 @@ class Game(GameObject):
         self._winners = set(status['winners'])
 
     def load(self, load_path):
-        """Load game environement from file."""
+        """Load game environment from file."""
         file_path = os.path.join(load_path, STATE_FILE)
         state = load(file_path)
         self.load_state(state)
@@ -347,7 +345,7 @@ class Game(GameObject):
         self.load_status(status)
 
     def save(self, save_path):
-        """Save game environement."""
+        """Save game environment."""
         state = self.state()
         file_path = os.path.join(save_path, STATE_FILE)
         save(state, file_path)
