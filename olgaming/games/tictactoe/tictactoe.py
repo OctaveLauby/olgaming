@@ -16,8 +16,8 @@ BOARD_FRMT = (
 )
 
 SYMBOLS = {
-    0: "O",
-    1: "X",
+    0: "\u26f1",
+    1: "\u26c4",
 }
 
 
@@ -70,10 +70,10 @@ class TicTacToe(Game):
             position = int(action)
             assert 0 <= position < 3 * 3
         except (AssertionError, ValueError):
-            raise InvalidAction(action)
+            raise InvalidAction(action, "position must be within [0, 8]")
 
         if self.board[position] is not None:
-            raise InvalidAction(action)
+            raise InvalidAction(action, "position already played")
 
         # Update board
         self.log.debug(
@@ -118,7 +118,7 @@ class TicTacToe(Game):
         """Display game."""
         print(self.board_str())
         print(
-            "Symbols: %s" % " | ".join(
+            "Symbols: %s |" % " | ".join(
                 map(
                     lambda item: "%s=%s" % item,
                     self.player_symbols.items()

@@ -29,7 +29,10 @@ STATUS_FILE = "status.json"
 
 class InvalidAction(Exception):
     """Exception raised when an invalid action is tried."""
-    pass
+
+    def __init__(self, value, msg=None):
+        add = f" - {msg}" if msg else ""
+        super().__init__(f"{value}{add}")
 
 
 class Game(GameObject):
@@ -287,10 +290,10 @@ class Game(GameObject):
             })
             try:
                 consequences = self.act(action)
-            except InvalidAction:
+            except InvalidAction as err:
                 self.log.warning(
                     "%s performed invalid action: %s",
-                    cplayer, action
+                    cplayer, err
                 )
                 continue
 
