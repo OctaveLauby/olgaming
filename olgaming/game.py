@@ -15,8 +15,8 @@ Vocabulary:
 """
 import os
 
-from olutils.params import read_params
-from olutils.tools import load, save
+from olutils import read_params
+from olutils import load, save
 
 from .gameobj import GameObject
 from .player import Player
@@ -88,7 +88,6 @@ class Game(GameObject):
         self.rewards = read_params(
             rewards,
             self.dft_rewards,
-            name="rewards",
         )
 
         # Players
